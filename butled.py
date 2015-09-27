@@ -1,26 +1,21 @@
 #!/usr/bin/python
 
-#GPIO           module     <module 'RPi.GPIO' from '<...>st-packages/RPi/GPIO.so'>
-#input          int        1
-#pasted_block   unicode    import time\n#initialise <...>ounce\n  time.sleep(0.05)
-#pinNum         int        27
-#prev_input     int        1
-#sint           int        -1
-#state          str        OFF
-#time           module     <module 'time' (built-in)>
-
 import RPi.GPIO as GPIO
 import time
 
+# GPIO PIN NUMBERS, INPUT: BUTTON, OUTPUT: LED
 inpin = 17
 outpin = 27
 
+#INITIALIZE GPIO
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(inpin,GPIO.IN)
 GPIO.setup(outpin,GPIO.OUT)
 
-prev_input = 0
+#STATE VARIABLE IS MULTIPLIED BY -1 EACH TIME BUTTON IS PRESSED
 sint = -1
+
+prev_input = 0
 
 while True:
     input = GPIO.input(inpin)
