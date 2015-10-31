@@ -4,6 +4,7 @@ import logging
 import RPi.GPIO as GPIO
 import time
 import datetime
+from poolcon import logdat
 
 # GPIO PIN NUMBERS, INPUT: BUTTON, OUTPUT: LED
 inpin = 14
@@ -18,14 +19,6 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(inpin,GPIO.IN)
 GPIO.setup(outpin,GPIO.OUT)
 
-def logout(message):
-  f=open('/var/log/gpio.log','a')
-  now = datetime.datetime.now()
-  timestamp = now.strftime("%Y/%m/%d %H:%M:%S")
-  outstring = str(timestamp)+"\t"+message+"\n"
-  f.write(outstring)
-  f.close()
-
 #LOOP
 logging.info('BEGIN LOOP')
 
@@ -33,39 +26,30 @@ while True:
     input = GPIO.input(inpin)
     sixty += 1
     if (sixty == 10):
-            sixty=0
-	    logout('SIXTY: GPIOOUT='+str(gpioout)+', COUNT='+str(count)+', COUNTDOWN='+str(countdown))
+        sixty=0
+        logdat('SIXTY',gpioout,count,countdown)
 
     if input > 0:
-            count = count + 1
-	    logout('ACTIVATED: GPIOOUT='+str(gpioout)+', COUNT='+str(count)+', COUNTDOWN='+str(countdown))
-
-            countdown = 30   
-	    
-            print "ACTIVATED"
-            print count
-	    
+        count = count + 1
+        logdat('ACTIVATED',gpioout,count,countdown)
+        countdown = 30   
     else:
-            countdown = countdown - 1
-            count = 0
-            print "OFF"
-	    logout('OFF: GPIOOUT='+str(gpioout)+', COUNT='+str(count)+', COUNTDOWN='+str(countdown))
-            print countdown
+        countdown = countdown - 1
+        count = 0
+        logdat('OFF',gpioout,count,countdown)
             
     if count > 30:
-            GPIO.output(outpin,GPIO.HIGH)
-	    if (gpioout != 1):  # If it is not equal to what its gonna be
-	    	logout('CHANGE(LOW TO HIGH): GPIOOUT='+str(gpioout)+', COUNT='+str(count)+', COUNTDOWN='+str(countdown))
-		gpioout = 1
-
-           # countdown = 30
+        GPIO.output(outpin,GPIO.HIGH)
+        if (gpioout != 1):  # If it is not equal to what its gonna be
+            logdat('CHANGE(LOW TO HIGH)',gpioout,count,countdown)
+            gpioout = 1
+            # countdown = 30
 
     if countdown < 1:
-            GPIO.output(outpin,GPIO.LOW)
-	    if (gpioout != -1):  # If it is not equal to what its gonna be
-	    	logout('CHANGE(HIGH TO LOW): GPIOOUT='+str(gpioout)+', COUNT='+str(count)+', COUNTDOWN='+str(countdown))
-		gpioout = -1
+        GPIO.output(outpin,GPIO.LOW)
+        if (gpioout != -1):  # If it is not equal to what its gonna be
+            logdat('CHANGE(HIGH TO LOW)',gpioout,count,countdown)
+            gpioout = -1
             
-
     time.sleep(1.0)
 
