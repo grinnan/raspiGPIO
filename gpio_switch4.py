@@ -11,6 +11,7 @@ outpin = 15
 count = 0
 sixty = 0
 countdown = 1
+gpioout=1
 
 #INITIALIZE GPIO
 GPIO.setmode(GPIO.BCM)
@@ -33,11 +34,11 @@ while True:
     sixty += 1
     if (sixty == 10):
             sixty=0
-	    logout('SIXTY: COUNT='+str(count)+', COUNTDOWN='+str(countdown))
+	    logout('SIXTY: GPIOOUT='+str(gpioout)+', COUNT='+str(count)+', COUNTDOWN='+str(countdown))
 
     if input > 0:
             count = count + 1
-	    logout('ACTIVATED: COUNT='+str(count)+', COUNTDOWN='+str(countdown))
+	    logout('ACTIVATED: GPIOOUT='+str(gpioout)+', COUNT='+str(count)+', COUNTDOWN='+str(countdown))
 
             countdown = 30   
 	    
@@ -48,15 +49,22 @@ while True:
             countdown = countdown - 1
             count = 0
             print "OFF"
-	    logout('OFF: COUNT='+str(count)+', COUNTDOWN='+str(countdown))
+	    logout('OFF: GPIOOUT='+str(gpioout)+', COUNT='+str(count)+', COUNTDOWN='+str(countdown))
             print countdown
             
     if count > 30:
             GPIO.output(outpin,GPIO.HIGH)
+	    if (gpioout != 1):  # If it is not equal to what its gonna be
+	    	logout('CHANGE(LOW TO HIGH): GPIOOUT='+str(gpioout)+', COUNT='+str(count)+', COUNTDOWN='+str(countdown))
+		gpioout = 1
+
            # countdown = 30
 
     if countdown < 1:
             GPIO.output(outpin,GPIO.LOW)
+	    if (gpioout != -1):  # If it is not equal to what its gonna be
+	    	logout('CHANGE(HIGH TO LOW): GPIOOUT='+str(gpioout)+', COUNT='+str(count)+', COUNTDOWN='+str(countdown))
+		gpioout = -1
             
 
     time.sleep(1.0)
