@@ -1,8 +1,9 @@
 import smtplib
 
-fromaddr = 'from@gmail.com'
-toaddrs  = ['email1@email.com','email2@email.com']
-msg = '''\
+def mailer():
+	fromaddr = 'from@gmail.com'
+	toaddrs  = ['email1@email.com','email2@email.com']
+	msg = '''\
 From: from@gmail.com
 Subject: This is a test for our notification system TEST2'
 
