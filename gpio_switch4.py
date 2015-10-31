@@ -20,7 +20,7 @@ GPIO.setup(outpin,GPIO.OUT)
 def logout(message):
   f=open('/var/log/gpio.log','a')
   now = datetime.datetime.now()
-  timestamp = now.strftime("%Y/%m/%d %H:%M")
+  timestamp = now.strftime("%Y/%m/%d %H:%M:%S")
   outstring = str(timestamp)+"\t"+message+"\n"
   f.write(outstring)
   f.close()
