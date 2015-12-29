@@ -5,6 +5,10 @@ import RPi.GPIO as GPIO
 import time
 import datetime
 from poolcon import logdat
+from poolmailer import mailer
+
+#mailer('username','password','recipeint address','subject','body')
+mailer('Pool Startup','Sensors are starting')
 
 # GPIO PIN NUMBERS, INPUT: BUTTON, OUTPUT: LED
 inpin = 14
@@ -44,12 +48,13 @@ while True:
             logdat('CHANGE(LOW TO HIGH)',gpioout,count,countdown)
             gpioout = 1
             # countdown = 30
+            mailer('Pumps Activated','Water level sensor is High. Pumps ok to start')
 
     if countdown < 1:
         GPIO.output(outpin,GPIO.LOW)
         if (gpioout != -1):  # If it is not equal to what its gonna be
             logdat('CHANGE(HIGH TO LOW)',gpioout,count,countdown)
             gpioout = -1
-            
+            mailer('Low Level Alert','Sensor detects low water level. Pumps Shutdown')
     time.sleep(1.0)
 
